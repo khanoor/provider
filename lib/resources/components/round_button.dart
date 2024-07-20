@@ -5,10 +5,11 @@ class RoundButton extends StatelessWidget {
   final String title;
   final bool loading;
   final VoidCallback onPressed;
+
   const RoundButton(
       {super.key,
       required this.title,
-      required this.loading,
+      this.loading = false,
       required this.onPressed});
 
   @override
