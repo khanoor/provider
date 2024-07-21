@@ -5,11 +5,11 @@ import 'package:provider_mvvm/utils/routes/routes_name.dart';
 import 'package:provider_mvvm/utils/utils.dart';
 import 'package:provider_mvvm/view_model/auth_view_model.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 ValueNotifier<bool> _obsecurePassword = ValueNotifier<bool>(true);
@@ -24,7 +24,7 @@ void dispose() {
   _passwordFocus.dispose();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Login"),
+          title: const Text("SignUp"),
           centerTitle: true,
         ),
         body: Column(
@@ -75,8 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 }),
             SizedBox(height: height * .05),
             RoundButton(
-              loading: authViewModel.loading,
-              title: 'Login',
+              loading: authViewModel.registerLoading,
+              title: 'SignUp',
               onPressed: () {
                 if (_emailController.text.isEmpty) {
                   Utils.snackBar("Please enter email", context);
@@ -90,16 +90,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     "email": _emailController.text.toString(),
                     "password": _passwordController.text.toString()
                   };
-                  authViewModel.loginApi(data, context);
+                  authViewModel.signupApi(data, context);
                 }
               },
             ),
             const SizedBox(height: 10),
             InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, RoutesName.signup);
+                  Navigator.pushNamed(context, RoutesName.login);
                 },
-                child: const Text("Don't have account...")),
+                child: const Text('Already have account...')),
           ],
         ),
       ),
