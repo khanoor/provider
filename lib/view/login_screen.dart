@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 10),
             InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, RoutesName.signup);
+                  Navigator.pushReplacementNamed(context, RoutesName.signup);
                 },
                 child: const Text("Don't have account...")),
           ],

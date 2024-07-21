@@ -97,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             const SizedBox(height: 10),
             InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, RoutesName.login);
+                  Navigator.pushReplacementNamed(context, RoutesName.login);
                 },
                 child: const Text('Already have account...')),
           ],
