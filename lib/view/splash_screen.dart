@@ -12,8 +12,9 @@ class _SplashScreenState extends State<SplashScreen> {
   SplashServices splashServices = SplashServices();
 
   @override
-  initState() {
+  void initState() {
     super.initState();
+
     splashServices.checkAuthentication(context);
   }
 
@@ -21,7 +22,10 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Splash"),
+        child: Text(
+          "Splash",
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 26),
+        ),
       ),
     );
   }

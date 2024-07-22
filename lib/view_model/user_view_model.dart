@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:provider_mvvm/model/user_model.dart';
+import 'package:provider_mvvm/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserViewModel extends ChangeNotifier {
@@ -13,12 +14,16 @@ class UserViewModel extends ChangeNotifier {
   Future<UserModel> getUser() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     final String? token = sp.getString("token");
+
     return UserModel(token: token.toString());
   }
 
   Future<bool> remove() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
-    sp.remove('token');
+    sp.remove("token");
+    sp.clear();
+    Utils.toastMessage('Logout successfully');
+    notifyListeners();
     return true;
   }
 }

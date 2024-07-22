@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provider_mvvm/model/user_model.dart';
 import 'package:provider_mvvm/repository/auth_repository.dart';
 import 'package:provider_mvvm/utils/routes/routes_name.dart';
 import 'package:provider_mvvm/utils/utils.dart';
+import 'package:provider_mvvm/view_model/user_view_model.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final _myrepo = AuthRepository();
@@ -19,11 +22,10 @@ class AuthViewModel extends ChangeNotifier {
     _myrepo.login(data).then((value) {
       setLoading(false);
       Utils.toastMessage('Login Successful');
+      final userPreferance = Provider.of<UserViewModel>(context, listen: false);
+      userPreferance.saveUser(UserModel(token: value['token'].toString()));
       Navigator.pushNamed(context, RoutesName.home);
       setLoading(false);
-      if (kDebugMode) {
-        print(value.toString());
-      }
     }).onError(
       (error, stackTrace) {
         setLoading(false);
@@ -49,9 +51,6 @@ class AuthViewModel extends ChangeNotifier {
       Utils.toastMessage('Register Successful');
       Navigator.pushNamed(context, RoutesName.home);
       setLoading(false);
-      if (kDebugMode) {
-        print(value.toString());
-      }
     }).onError(
       (error, stackTrace) {
         setRegsiterLoading(false);
