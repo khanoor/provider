@@ -9,7 +9,7 @@ class SplashServices {
   void checkAuthentication(BuildContext context) async {
     getUserData().then((value) async {
       await Future.delayed(const Duration(seconds: 3));
-      if (value.token == null || value.token == '') {
+      if (value.token == "null" || value.token == '') {
         Navigator.pushReplacementNamed(context, RoutesName.login);
       } else {
         await Future.delayed(const Duration(seconds: 3));
