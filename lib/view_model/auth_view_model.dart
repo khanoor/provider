@@ -2,13 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_mvvm/model/user_model.dart';
-import 'package:provider_mvvm/repository/auth_repository.dart';
+import 'package:provider_mvvm/repository/repository.dart';
+import 'package:provider_mvvm/resources/app_url.dart';
 import 'package:provider_mvvm/utils/routes/routes_name.dart';
 import 'package:provider_mvvm/utils/utils.dart';
 import 'package:provider_mvvm/view_model/user_view_model.dart';
 
 class AuthViewModel extends ChangeNotifier {
-  final _myrepo = AuthRepository();
+  final _myrepo = Repository();
 
   bool _loading = false;
   bool get loading => _loading;
@@ -19,7 +20,7 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<void> loginApi(dynamic data, BuildContext context) async {
     setLoading(true);
-    _myrepo.login(data).then((value) {
+    _myrepo.postApi(AppUrl.login, data).then((value) {
       setLoading(false);
       Utils.toastMessage('Login Successful');
       final userPreferance = Provider.of<UserViewModel>(context, listen: false);
@@ -46,7 +47,7 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<void> signupApi(dynamic data, BuildContext context) async {
     setRegsiterLoading(true);
-    _myrepo.register(data).then((value) {
+    _myrepo.postApi(AppUrl.register, data).then((value) {
       setRegsiterLoading(false);
       Utils.toastMessage('Register Successful');
       Navigator.pushNamed(context, RoutesName.home);

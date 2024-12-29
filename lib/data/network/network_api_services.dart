@@ -64,6 +64,8 @@ class NetworkApiServices extends BaseApiServices {
         return responseJosn;
       case 400:
         throw BadRequestException(response.body.toString());
+      case 401:
+        throw BadRequestException(response.body.toString());
       case 404:
         throw UnauthorisedException(response.body.toString());
       case 500:
