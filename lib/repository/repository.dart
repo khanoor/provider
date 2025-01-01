@@ -1,22 +1,22 @@
 import 'package:provider_mvvm/data/network/base_api_services.dart';
 import 'package:provider_mvvm/data/network/network_api_services.dart';
 
-class Repository{
-
+class Repository {
   final BaseApiServices _apiServices = NetworkApiServices();
 
-  Future<dynamic> getApi(dynamic url) async {
+  Future<dynamic> getApi(String url, {String? token}) async {
     try {
-      dynamic response = await _apiServices.getGetApiResponse(url);
+      dynamic response = await _apiServices.getGetApiResponse(url, token: token);
       return response;
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<dynamic> postApi(dynamic url, dynamic data) async {
+  Future<dynamic> postApi(String url, dynamic data, {String? token}) async {
     try {
-      dynamic response = await _apiServices.getPostApiResponse(url, data);
+      dynamic response =
+          await _apiServices.getPostApiResponse(url, data, token: token);
       return response;
     } catch (e) {
       rethrow;

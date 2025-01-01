@@ -9,13 +9,19 @@ import 'package:provider_mvvm/data/network/base_api_services.dart';
 class NetworkApiServices extends BaseApiServices {
   @override
   Future getGetApiResponse(String url,
-      {Map<String, String>? headers, Map<String, dynamic>? body}) async {
+      {Map<String, String>? headers, Map<String, dynamic>? body, String? token}) async {
     dynamic responseJson;
     try {
       var request = http.Request('GET', Uri.parse(url));
 
-      request.headers.addAll(headers ?? {});
+      // Add headers
+      Map<String, String> finalHeaders = headers ?? {};
+      if (token != null) {
+        finalHeaders['Authorization'] = 'Bearer $token';
+      }
+      request.headers.addAll(finalHeaders);
 
+      // Add body if provided
       if (body != null) {
         request.body = json.encode(body);
       }
@@ -37,15 +43,25 @@ class NetworkApiServices extends BaseApiServices {
   }
 
   @override
-  Future getPostApiResponse(String url, dynamic data, {String? cookie}) async {
+  Future getPostApiResponse(String url, dynamic data,
+      {String? cookie, String? token}) async {
     dynamic responseJson;
     try {
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (cookie != null) {
+        headers["Cookie"] = "token=$cookie";
+      }
+
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+
       Response response = await post(
         Uri.parse(url),
-        headers: {
-          "Content-Type": "application/json",
-          "Cookie": "token=$cookie"
-        },
+        headers: headers,
         body: jsonEncode(data),
       ).timeout(const Duration(seconds: 10));
 
@@ -65,14 +81,14 @@ class NetworkApiServices extends BaseApiServices {
       case 400:
         throw BadRequestException(response.body.toString());
       case 401:
-        throw BadRequestException(response.body.toString());
+        throw UnauthorisedException(response.body.toString());
       case 404:
         throw UnauthorisedException(response.body.toString());
       case 500:
-        throw UnauthorisedException(response.body.toString());
+        throw FetchDataException(response.body.toString());
       default:
         throw FetchDataException(
-            'Error Occured on Http Request with status code${response.statusCode}');
+            'Error occurred on Http Request with status code ${response.statusCode}');
     }
   }
 }
