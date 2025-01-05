@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:provider_mvvm/data/app_excaptions.dart';
 import 'package:provider_mvvm/data/network/base_api_services.dart';
 
 class NetworkApiServices extends BaseApiServices {
   @override
   Future getGetApiResponse(String url,
-      {Map<String, String>? headers, Map<String, dynamic>? body, String? token}) async {
+      {Map<String, String>? headers,
+      Map<String, dynamic>? body,
+      String? token}) async {
     dynamic responseJson;
     try {
       var request = http.Request('GET', Uri.parse(url));
@@ -44,7 +46,7 @@ class NetworkApiServices extends BaseApiServices {
 
   @override
   Future getPostApiResponse(String url, dynamic data,
-      {String? cookie, String? token}) async {
+      {String? cookie, String? token, File? file}) async {
     dynamic responseJson;
     try {
       Map<String, String> headers = {
@@ -59,11 +61,26 @@ class NetworkApiServices extends BaseApiServices {
         headers['Authorization'] = 'Bearer $token';
       }
 
-      Response response = await post(
-        Uri.parse(url),
-        headers: headers,
-        body: jsonEncode(data),
-      ).timeout(const Duration(seconds: 10));
+      http.Response response;
+
+      if (file != null) {
+        // Multipart request for file upload
+        var request = http.MultipartRequest('POST', Uri.parse(url))
+          ..headers.addAll(headers)
+          ..fields.addAll(data);
+        request.files.add(await http.MultipartFile.fromPath('file', file.path));
+
+        var streamedResponse = await request.send();
+        response = await http.Response.fromStream(streamedResponse);
+      } else {
+        response = await http
+            .post(
+              Uri.parse(url),
+              headers: headers,
+              body: jsonEncode(data),
+            )
+            .timeout(const Duration(seconds: 10));
+      }
 
       responseJson = returnResponse(response);
     } on SocketException {
